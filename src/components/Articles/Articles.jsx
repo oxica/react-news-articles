@@ -7,6 +7,7 @@ class ArticlesView extends Component {
     articles: [],
     currentPage: 1,
     searchQuery: '',
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -23,16 +24,21 @@ class ArticlesView extends Component {
     const { currentPage, searchQuery } = this.state;
     const options = { searchQuery, currentPage };
 
-    newsApi.fetchArticles(options).then(articles => {
-      this.setState(prevState => ({
-        articles: [...prevState.articles, ...articles],
-        currentPage: prevState.currentPage + 1,
-      }));
-    });
+    this.setState({ isLoading: true });
+
+    newsApi
+      .fetchArticles(options)
+      .then(articles => {
+        this.setState(prevState => ({
+          articles: [...prevState.articles, ...articles],
+          currentPage: prevState.currentPage + 1,
+        }));
+      })
+      .finally(() => this.setState({ isLoading: false }));
   };
 
   render() {
-    const { articles } = this.state;
+    const { articles, isLoading } = this.state;
     return (
       <div>
         <h1>Articles</h1>
@@ -44,6 +50,9 @@ class ArticlesView extends Component {
             </li>
           ))}
         </ul>
+
+        {isLoading && <p>Loading...</p>}
+
         {articles.length > 0 && (
           <button type="button" onClick={this.fetchArticles}>
             Loading more
