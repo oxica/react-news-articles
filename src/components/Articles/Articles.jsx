@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import SearchForm from '../SearchForm/SearchForm';
-
-axios.defaults.headers.common['Authorization'] =
-  'Bearer 6dc027d8d708448cbd71c567f3505e15';
+import newsApi from '../../services/news-api';
 
 class ArticlesView extends Component {
   state = {
@@ -24,16 +21,17 @@ class ArticlesView extends Component {
 
   fetchArticles = () => {
     const { currentPage, searchQuery } = this.state;
-    axios
-      .get(
-        `https://newsapi.org/v2/everything?q=${searchQuery}&pageSize=5&page=${currentPage}`
-      )
-      .then(res => {
-        this.setState(prevState => ({
-          articles: [...prevState.articles, ...res.data.articles],
-          currentPage: prevState.currentPage + 1,
-        }));
-      });
+    const options = {
+      searchQuery,
+      currentPage,
+    };
+
+    newsApi.fetchArticles(options).then(articles => {
+      this.setState(prevState => ({
+        articles: [...prevState.articles, ...articles],
+        currentPage: prevState.currentPage + 1,
+      }));
+    });
   };
 
   render() {
