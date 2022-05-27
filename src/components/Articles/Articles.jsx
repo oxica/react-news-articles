@@ -9,18 +9,30 @@ class ArticlesView extends Component {
   state = {
     articles: [],
     currentPage: 1,
+    searchQuery: '',
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.searchQuery !== this.state.searchQuery) {
+      this.fetchArticles();
+    }
+  }
+
   onChangeQuery = query => {
-    const { currentPage } = this.state;
+    this.setState({ searchQuery: query });
+  };
+
+  fetchArticles = () => {
+    const { currentPage, searchQuery } = this.state;
     axios
       .get(
-        `https://newsapi.org/v2/everything?q=${query}&pageSize=5&page=${currentPage}`
+        `https://newsapi.org/v2/everything?q=${searchQuery}&pageSize=5&page=${currentPage}`
       )
       .then(res => {
-        this.setState({
+        this.setState(prevState => ({
           articles: res.data.articles,
-        });
+          currentPage: prevState.currentPage + 1,
+        }));
       });
   };
 
@@ -37,6 +49,9 @@ class ArticlesView extends Component {
             </li>
           ))}
         </ul>
+        <button type="button" onClick={this.fetchArticles}>
+          Loading more
+        </button>
       </div>
     );
   }
