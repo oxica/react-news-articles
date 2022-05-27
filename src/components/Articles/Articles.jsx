@@ -21,10 +21,7 @@ class ArticlesView extends Component {
 
   fetchArticles = () => {
     const { currentPage, searchQuery } = this.state;
-    const options = {
-      searchQuery,
-      currentPage,
-    };
+    const options = { searchQuery, currentPage };
 
     newsApi.fetchArticles(options).then(articles => {
       this.setState(prevState => ({
@@ -47,9 +44,11 @@ class ArticlesView extends Component {
             </li>
           ))}
         </ul>
-        <button type="button" onClick={this.fetchArticles}>
-          Loading more
-        </button>
+        {articles.length > 0 && (
+          <button type="button" onClick={this.fetchArticles}>
+            Loading more
+          </button>
+        )}
       </div>
     );
   }
