@@ -19,7 +19,7 @@ class ArticlesView extends Component {
   }
 
   onChangeQuery = query => {
-    this.setState({ searchQuery: query });
+    this.setState({ searchQuery: query, currentPage: 1, articles: [] });
   };
 
   fetchArticles = () => {
@@ -30,7 +30,7 @@ class ArticlesView extends Component {
       )
       .then(res => {
         this.setState(prevState => ({
-          articles: res.data.articles,
+          articles: [...prevState.articles, ...res.data.articles],
           currentPage: prevState.currentPage + 1,
         }));
       });
