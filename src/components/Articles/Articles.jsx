@@ -39,6 +39,7 @@ class ArticlesView extends Component {
 
   render() {
     const { articles, isLoading } = this.state;
+    const shouldRenderLoadMoreButton = articles.length > 0 && !isLoading;
     return (
       <div>
         <h1>Articles</h1>
@@ -53,7 +54,7 @@ class ArticlesView extends Component {
 
         {isLoading && <p>Loading...</p>}
 
-        {articles.length > 0 && (
+        {shouldRenderLoadMoreButton && (
           <button type="button" onClick={this.fetchArticles}>
             Loading more
           </button>
