@@ -8,6 +8,7 @@ class ArticlesView extends Component {
     currentPage: 1,
     searchQuery: '',
     isLoading: false,
+    error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -17,7 +18,12 @@ class ArticlesView extends Component {
   }
 
   onChangeQuery = query => {
-    this.setState({ searchQuery: query, currentPage: 1, articles: [] });
+    this.setState({
+      searchQuery: query,
+      currentPage: 1,
+      articles: [],
+      error: null,
+    });
   };
 
   fetchArticles = () => {
@@ -34,15 +40,17 @@ class ArticlesView extends Component {
           currentPage: prevState.currentPage + 1,
         }));
       })
+      .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
   render() {
-    const { articles, isLoading } = this.state;
+    const { articles, isLoading, error } = this.state;
     const shouldRenderLoadMoreButton = articles.length > 0 && !isLoading;
     return (
       <div>
         <h1>Articles</h1>
+
         <SearchForm onSubmit={this.onChangeQuery} />
         <ul>
           {articles.map(({ title, url }) => (
@@ -51,6 +59,7 @@ class ArticlesView extends Component {
             </li>
           ))}
         </ul>
+        {error && <p>Error</p>}
 
         {isLoading && <p>Loading...</p>}
 
