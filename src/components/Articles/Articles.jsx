@@ -10,20 +10,20 @@ class ArticlesView extends Component {
     articles: [],
   };
 
-  componentDidMount() {
-    axios.get('https://newsapi.org/v2/everything?q=bitcoin').then(res => {
+  onChangeQuery = query => {
+    axios.get(`https://newsapi.org/v2/everything?q=${query}`).then(res => {
       this.setState({
         articles: res.data.articles,
       });
     });
-  }
+  };
 
   render() {
     const { articles } = this.state;
     return (
       <div>
         <h1>Articles</h1>
-        <SearchForm />
+        <SearchForm onSubmit={this.onChangeQuery} />
         <ul>
           {articles.map(({ title, url }) => (
             <li key={title}>
