@@ -8,14 +8,20 @@ axios.defaults.headers.common['Authorization'] =
 class ArticlesView extends Component {
   state = {
     articles: [],
+    currentPage: 1,
   };
 
   onChangeQuery = query => {
-    axios.get(`https://newsapi.org/v2/everything?q=${query}`).then(res => {
-      this.setState({
-        articles: res.data.articles,
+    const { currentPage } = this.state;
+    axios
+      .get(
+        `https://newsapi.org/v2/everything?q=${query}&pageSize=5&page=${currentPage}`
+      )
+      .then(res => {
+        this.setState({
+          articles: res.data.articles,
+        });
       });
-    });
   };
 
   render() {
