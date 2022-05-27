@@ -1,9 +1,9 @@
-// 6dc027d8d708448cbd71c567f3505e15
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// https://newsapi.org/v2/everything?q=bitcoin&apiKey=6dc027d8d708448cbd71c567f3505e15
-
 import React, { Component } from 'react';
 import axios from 'axios';
+import SearchForm from '../SearchForm/SearchForm';
+
+axios.defaults.headers.common['Authorization'] =
+  'Bearer 6dc027d8d708448cbd71c567f3505e15';
 
 class ArticlesView extends Component {
   state = {
@@ -11,15 +11,11 @@ class ArticlesView extends Component {
   };
 
   componentDidMount() {
-    axios
-      .get(
-        'https://newsapi.org/v2/everything?q=bitcoin&apiKey=6dc027d8d708448cbd71c567f3505e15'
-      )
-      .then(res => {
-        this.setState({
-          articles: res.data.articles,
-        });
+    axios.get('https://newsapi.org/v2/everything?q=bitcoin').then(res => {
+      this.setState({
+        articles: res.data.articles,
       });
+    });
   }
 
   render() {
@@ -27,6 +23,7 @@ class ArticlesView extends Component {
     return (
       <div>
         <h1>Articles</h1>
+        <SearchForm />
         <ul>
           {articles.map(({ title, url }) => (
             <li key={title}>
